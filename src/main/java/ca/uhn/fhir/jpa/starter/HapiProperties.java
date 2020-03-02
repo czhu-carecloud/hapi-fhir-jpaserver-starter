@@ -73,6 +73,7 @@ public class HapiProperties {
   static final String BULK_EXPORT_ENABLED = "bulk.export.enabled";
   static final String EXPIRE_SEARCH_RESULTS_AFTER_MINS = "retain_cached_searches_mins";
   static final String MAX_BINARY_SIZE = "max_binary_size";
+  static final String JWT_SECRET = "jwt.secret";
   private static Properties ourProperties;
 
   public static boolean isElasticSearchEnabled() {
@@ -482,6 +483,9 @@ public class HapiProperties {
     return (T) Enum.valueOf(theEnumType, value);
   }
 
+  public static String getJwtSecret() {
+    return HapiProperties.getProperty(JWT_SECRET, null);
+  }
   public static boolean getBulkExportEnabled() {
     return HapiProperties.getBooleanProperty(BULK_EXPORT_ENABLED, true);
   }

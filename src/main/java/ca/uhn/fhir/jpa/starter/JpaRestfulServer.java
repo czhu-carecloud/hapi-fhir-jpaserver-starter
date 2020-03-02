@@ -22,6 +22,7 @@ import ca.uhn.fhir.jpa.provider.r4.JpaSystemProviderR4;
 import ca.uhn.fhir.jpa.provider.r5.JpaConformanceProviderR5;
 import ca.uhn.fhir.jpa.provider.r5.JpaSystemProviderR5;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
+import ca.uhn.fhir.jpa.starter.interceptors.ContextInterceptor;
 import ca.uhn.fhir.jpa.subscription.SubscriptionInterceptorLoader;
 import ca.uhn.fhir.jpa.subscription.module.interceptor.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceProviderFactory;
@@ -192,6 +193,17 @@ public class JpaRestfulServer extends RestfulServer {
     loggingInterceptor.setLogExceptions(HapiProperties.getLoggerLogExceptions());
     this.registerInterceptor(loggingInterceptor);
 
+    /*
+     * Add our custom CareCloud interceptors jere
+     */
+
+    /*
+     * Context interceptor verifies the context jwt token header
+     * and stamps context on the resource.Meta.Tag on saves and
+     * filters queries by Context.
+     */
+    ContextInterceptor contextInterceptor = new ContextInterceptor();
+    this.registerInterceptor(contextInterceptor);
     /*
      * If you are hosting this server at a specific DNS name, the server will try to
      * figure out the FHIR base URL based on what the web container tells it, but
