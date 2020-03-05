@@ -1,4 +1,4 @@
-package ca.uhn.fhir.jpa.starter.context.model;
+package ca.uhn.fhir.jpa.starter.context.models;
 
 public class User {
   private String id;

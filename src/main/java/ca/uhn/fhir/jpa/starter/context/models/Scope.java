@@ -1,4 +1,4 @@
-package ca.uhn.fhir.jpa.starter.context.model;
+package ca.uhn.fhir.jpa.starter.context.models;
 
 public class Scope {
   private String organizationDisplay;
@@ -24,6 +24,14 @@ public class Scope {
   }
 
   public String getOrganizationId() {
+    String[] split = organizationId.split("/");
+    if (split.length < 2) {
+      return "";
+    }
+    return split[1];
+  }
+
+  public String getOrganizationReference() {
     return this.organizationId;
   }
 

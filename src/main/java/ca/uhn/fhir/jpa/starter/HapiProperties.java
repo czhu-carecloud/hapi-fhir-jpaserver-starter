@@ -74,6 +74,8 @@ public class HapiProperties {
   static final String EXPIRE_SEARCH_RESULTS_AFTER_MINS = "retain_cached_searches_mins";
   static final String MAX_BINARY_SIZE = "max_binary_size";
   static final String JWT_SECRET = "jwt.secret";
+  static final String ADDRESS_SETTINGS_API = "address.settings_api";
+  static final String CACHE_MAX_CAPACITY = "cache.max_capacity";
   private static Properties ourProperties;
 
   public static boolean isElasticSearchEnabled() {
@@ -486,6 +488,15 @@ public class HapiProperties {
   public static String getJwtSecret() {
     return HapiProperties.getProperty(JWT_SECRET, null);
   }
+
+  public static Integer getCacheMaxCapacity() {
+    return getIntegerProperty(CACHE_MAX_CAPACITY, -1);
+  }
+
+  public static String getAddressSettingsApi() {
+    return HapiProperties.getProperty(ADDRESS_SETTINGS_API, null);
+  }
+
   public static boolean getBulkExportEnabled() {
     return HapiProperties.getBooleanProperty(BULK_EXPORT_ENABLED, true);
   }
