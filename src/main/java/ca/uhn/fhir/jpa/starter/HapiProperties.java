@@ -76,6 +76,11 @@ public class HapiProperties {
   static final String JWT_SECRET = "jwt.secret";
   static final String ADDRESS_SETTINGS_API = "address.settings_api";
   static final String CACHE_MAX_CAPACITY = "cache.max_capacity";
+  static final String KAFKA_HOST = "kafka.host";
+  static final String KAFKA_KEY = "kafka.key";
+  static final String KAFKA_SECRET = "kafka.secret";
+  static final String KAFKA_GROUP = "kafka.group";
+
   private static Properties ourProperties;
 
   public static boolean isElasticSearchEnabled() {
@@ -497,6 +502,21 @@ public class HapiProperties {
     return HapiProperties.getProperty(ADDRESS_SETTINGS_API, null);
   }
 
+  public static String getKafkaHost() {
+    return HapiProperties.getProperty(KAFKA_HOST, null);
+  }
+
+  public static String getKafkaKey() {
+    return HapiProperties.getProperty(KAFKA_KEY, null);
+  }
+
+  public static String getKafkaSecret() {
+    return HapiProperties.getProperty(KAFKA_SECRET, null);
+  }
+
+  public static String getKafkaGroup() {
+    return HapiProperties.getProperty(KAFKA_GROUP, null);
+  }
   public static boolean getBulkExportEnabled() {
     return HapiProperties.getBooleanProperty(BULK_EXPORT_ENABLED, true);
   }

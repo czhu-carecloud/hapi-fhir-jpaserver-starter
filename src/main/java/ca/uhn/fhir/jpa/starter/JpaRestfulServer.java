@@ -25,6 +25,7 @@ import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.starter.interceptors.ContextInterceptor;
 import ca.uhn.fhir.jpa.starter.utils.HttpClient;
 import ca.uhn.fhir.jpa.starter.utils.LRUCache;
+import ca.uhn.fhir.jpa.starter.interceptors.KafkaInterceptor;
 import ca.uhn.fhir.jpa.subscription.SubscriptionInterceptorLoader;
 import ca.uhn.fhir.jpa.subscription.module.interceptor.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceProviderFactory;
@@ -205,6 +206,13 @@ public class JpaRestfulServer extends RestfulServer {
      */
     ContextInterceptor contextInterceptor = new ContextInterceptor(new LRUCache<String, List<String>>(HapiProperties.getCacheMaxCapacity()), new HttpClient());
     this.registerInterceptor(contextInterceptor);
+
+    /* Kafka interceptor
+     */
+    KafkaInterceptor kafkaInterceptor = new KafkaInterceptor();
+    this.registerInterceptor(kafkaInterceptor);
+
+
     /*
      * If you are hosting this server at a specific DNS name, the server will try to
      * figure out the FHIR base URL based on what the web container tells it, but
