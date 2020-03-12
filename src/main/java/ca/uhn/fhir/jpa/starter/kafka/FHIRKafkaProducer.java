@@ -1,34 +1,34 @@
 package ca.uhn.fhir.jpa.starter.kafka;
 
+import ca.uhn.fhir.jpa.starter.producer.IProducer;
 import org.apache.kafka.clients.producer.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Component;
-import ca.uhn.fhir.jpa.starter.HapiProperties;
 import ca.uhn.fhir.jpa.starter.kafka.models.FHIRKafkaMessage;
 
 import java.util.Properties;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 @Component("FHIRKafkaProducer")
-public class FHIRKafkaProducer implements DisposableBean, IKafkaProducer {
+public class FHIRKafkaProducer implements DisposableBean, IProducer {
   private static final Logger log = LoggerFactory.getLogger(FHIRKafkaProducer.class.getName());
+  private static final Dotenv dotenv = Dotenv.load();
+
+  private final String bootstrapServerConfig = dotenv.get("KAFKA_HOST");
+  private final String KAFKA_KEY = dotenv.get("KAFKA_KEY");
+  private final String KAFKA_SECRET = dotenv.get("KAFKA_SECRET");
+  private static final String jaasTemplate = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"%s\" password=\"%s\";";
+  private final String jaasCfg = String.format(jaasTemplate, KAFKA_KEY, KAFKA_SECRET);
 
   private Properties producerProps;
   private Producer<String, String> producer;
-  private TestCallback callback;
+  private MessagePublishedCallback callback;
 
   public FHIRKafkaProducer() {
-    java.util.Map<String, String> env = System.getenv();
-
-    String bootstrapServerConfig = HapiProperties.getKafkaHost();
-    String KAFKA_KEY = HapiProperties.getKafkaKey();
-    String KAFKA_SECRET = HapiProperties.getKafkaSecret();
-
-    String jaasTemplate = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"%s\" password=\"%s\";";
-    String jaasCfg = String.format(jaasTemplate, KAFKA_KEY, KAFKA_SECRET);
-
     producerProps = new Properties();
     producerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServerConfig);
     producerProps.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
@@ -46,7 +46,7 @@ public class FHIRKafkaProducer implements DisposableBean, IKafkaProducer {
     producerProps.list(System.out);
 
     producer = new KafkaProducer<>(producerProps);
-    callback = new TestCallback();
+    callback = new MessagePublishedCallback();
   }
 
   @Override
@@ -63,7 +63,7 @@ public class FHIRKafkaProducer implements DisposableBean, IKafkaProducer {
     producer.send(data, callback);
   }
 
-  private static class TestCallback implements Callback {
+  private static class MessagePublishedCallback implements Callback {
     public void onCompletion(RecordMetadata recordMetadata, Exception e) {
       if (e != null) {
         log.error("Error while producing message {}{}", recordMetadata != null ? String.format(" for topic: %s ", recordMetadata.topic()) : "", e);
@@ -72,5 +72,4 @@ public class FHIRKafkaProducer implements DisposableBean, IKafkaProducer {
       }
     }
   }
-
 }

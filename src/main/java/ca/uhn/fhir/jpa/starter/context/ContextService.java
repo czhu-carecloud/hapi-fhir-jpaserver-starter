@@ -20,9 +20,12 @@ import java.util.List;
 
 import java.io.UnsupportedEncodingException;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 
 public class ContextService {
-
+  private static final Dotenv dotenv = Dotenv.load();
+  private static final String JWT_SECRET = "JWT_SECRET";
 
   private String _settingsApi;
   private String _token;
@@ -37,7 +40,7 @@ public class ContextService {
     this.cache = cache;
     _httpClient = httpClient;
     _token = token;
-    String _secret = HapiProperties.getJwtSecret();
+    String _secret = dotenv.get(JWT_SECRET);
     _settingsApi = HapiProperties.getAddressSettingsApi();
     _gson = new Gson();
     Algorithm _algorithm = Algorithm.HMAC256(_secret);

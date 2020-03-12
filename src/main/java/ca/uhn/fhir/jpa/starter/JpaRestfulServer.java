@@ -23,6 +23,7 @@ import ca.uhn.fhir.jpa.provider.r5.JpaConformanceProviderR5;
 import ca.uhn.fhir.jpa.provider.r5.JpaSystemProviderR5;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.starter.interceptors.ContextInterceptor;
+import ca.uhn.fhir.jpa.starter.kafka.FHIRKafkaProducer;
 import ca.uhn.fhir.jpa.starter.utils.HttpClient;
 import ca.uhn.fhir.jpa.starter.utils.LRUCache;
 import ca.uhn.fhir.jpa.starter.interceptors.KafkaInterceptor;
@@ -209,7 +210,7 @@ public class JpaRestfulServer extends RestfulServer {
 
     /* Kafka interceptor
      */
-    KafkaInterceptor kafkaInterceptor = new KafkaInterceptor();
+    KafkaInterceptor kafkaInterceptor = new KafkaInterceptor(new FHIRKafkaProducer());
     this.registerInterceptor(kafkaInterceptor);
 
 
