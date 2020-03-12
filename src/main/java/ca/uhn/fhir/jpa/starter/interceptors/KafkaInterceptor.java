@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter.interceptors;
 
 import ca.uhn.fhir.interceptor.api.Hook;
+import ca.uhn.fhir.interceptor.api.Interceptor;
 import ca.uhn.fhir.interceptor.api.Pointcut;
 import ca.uhn.fhir.jpa.starter.utils.IHttpClient;
 import ca.uhn.fhir.jpa.starter.utils.ILRUCache;
@@ -22,6 +23,12 @@ import ca.uhn.fhir.jpa.starter.kafka.FHIRKafkaProducer;
 import ca.uhn.fhir.jpa.starter.context.ContextService;
 import ca.uhn.fhir.jpa.starter.context.models.Context;
 
+
+/**
+ * KafkaInterceptor: Class which intercepts
+ */
+
+@Interceptor
 public class KafkaInterceptor {
   private static final Logger log = LoggerFactory.getLogger(KafkaInterceptor.class.getName());
 
