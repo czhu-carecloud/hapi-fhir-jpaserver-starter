@@ -9,6 +9,18 @@ public class FHIRKafkaMessage {
   FhirContext ctx = FhirContext.forDstu3();
   IParser parser = ctx.newJsonParser();
 
+  public FHIRKafkaMessage(String requestType, Context context, IBaseResource payload,
+                          String recordId, Long timeStamp){
+    this.type = requestType;
+    this.context = context;
+    this.payload = payload;
+    this.timeStamp = timeStamp;
+    if (recordId != null) {
+      FHIRMeta meta = new FHIRMeta(recordId);
+      this.meta = meta;
+    }
+  }
+
   private String type;
 
   private IBaseResource payload;
@@ -38,8 +50,7 @@ public class FHIRKafkaMessage {
     return this.timeStamp;
   }
   public void setMeta(String recordId){
-    FHIRMeta meta = new FHIRMeta();
-    meta.setRecordId(recordId);
+    FHIRMeta meta = new FHIRMeta(recordId);
     this.meta = meta;
   }
   public FHIRMeta getMeta(){

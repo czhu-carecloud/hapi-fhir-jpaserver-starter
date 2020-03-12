@@ -4,6 +4,10 @@ import com.google.gson.Gson;
 
 public class FHIRMeta
 {
+  public FHIRMeta(String recordId){
+    this.recordId = recordId;
+  }
+
   private String recordId;
 
   public void setRecordId(String recordId){
