@@ -1,0 +1,126 @@
+version: 2.1
+
+orbs:
+  maven: circleci/maven@0.0.12
+  gcp-gcr: carecloud/gcp-gcr@0.0.3
+  gcp-kms: carecloud/gcp-kms@0.0.1
+  gcp-gke: carecloud/gcp-gke@0.0.1
+  github: carecloud/github@0.0.1
+  docker: carecloud/docker@0.0.1
+  wait-for: cobli/wait-for@0.0.2
+jobs:
+  test:
+    docker:
+      - image: circleci/openjdk:8-jdk
+      - image: circleci/mysql:latest
+        environment:
+          MYSQL_DATABASE: 'hapi'
+          MYSQL_USER: 'admin'
+          MYSQL_PASSWORD: 'admin'
+          MYSQL_ROOT_PASSWORD: 'admin'
+    working_directory: ~/circleci-demo-java-springm
+    steps:
+      - checkout
+      - restore_cache:
+          key: circleci-demo-java-spring-{{ checksum "pom.xml" }}
+      - run: mvn dependency:go-offline # gets the project dependencies
+      - save_cache: # saves the project dependencies
+          paths:
+            - ~/.m2
+          key: circleci-demo-java-spring-{{ checksum "pom.xml" }}
+      - run:
+          name: install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.3.0
+      - run:
+          name: Run the application
+          command: mvn jetty:run
+          background: true
+      - run:
+          name: Wait for server
+          command: dockerize -wait tcp://localhost:8080/hapi-fhir-jpaserver -timeout 1m
+      - run: mvn test
+workflows:
+  build-dev-image-and-push:
+    jobs:
+      - gcp-gke/create-kube-config:
+          context: dev
+          filters:
+            branches:
+              only: /dev/
+      - gcp-kms/get-and-decrypt:
+          context: dev
+          ciphertext-file: hub.enc
+          plaintext-file: hub
+          bucket: GCS_PIPELINE_BUCKET
+          object-path: hub.enc
+          filters:
+            branches:
+              only: /dev/
+      - gcp-gcr/build-and-push-image:
+          context: dev
+          image: hapi-fhir-jpaserver-starter
+          resource-class: medium
+          filters:
+            branches:
+              only: /dev/
+      - github/create-k8-patch:
+          context: dev
+          github-repo: hapi-fhir-jpaserver-starter
+          k8-container-name: hapi-fhir-jpaserver-starter
+          requires:
+            - gcp-kms/get-and-decrypt
+            - gcp-gke/create-kube-config
+            - gcp-gcr/build-and-push-image
+          filters:
+            branches:
+              only: /dev/
+  build-qa-image-and-push:
+    jobs:
+      - gcp-gke/create-kube-config:
+          context: qa
+          filters:
+            tags:
+              only: /\d\d\.\d\d\.\d\d\.\d*/
+            branches:
+              ignore: /.*/
+      - gcp-kms/get-and-decrypt:
+          context: qa
+          ciphertext-file: hub.enc
+          plaintext-file: hub
+          bucket: GCS_PIPELINE_BUCKET
+          object-path: hub.enc
+          filters:
+            tags:
+              only: /\d\d\.\d\d\.\d\d\.\d*/
+            branches:
+              ignore: /.*/
+      - gcp-gcr/build-and-push-image:
+          context: qa
+          image: hapi-fhir-jpaserver-starter
+          resource-class: medium
+          tag: CIRCLE_TAG
+          filters:
+            tags:
+              only: /\d\d\.\d\d\.\d\d\.\d*/
+            branches:
+              ignore: /.*/
+      - github/create-k8-patch:
+          context: qa
+          github-repo: hapi-fhir-jpaserver-starter
+          k8-container-name: hapi-fhir-jpaserver-starter
+          requires:
+            - gcp-kms/get-and-decrypt
+            - gcp-gke/create-kube-config
+            - gcp-gcr/build-and-push-image
+          filters:
+            tags:
+              only: /\d\d\.\d\d\.\d\d\.\d*/
+            branches:
+              ignore: /.*/
+  maven-test:
+    jobs:
+      - test
+
+

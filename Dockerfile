@@ -11,7 +11,11 @@ RUN /tmp/apache-maven-3.6.2/bin/mvn dependency:resolve
 RUN /tmp/apache-maven-3.6.2/bin/mvn install -DskipTests
 
 WORKDIR /tmp
-RUN git clone --branch ${HAPI_FHIR_STARTER_BRANCH} ${HAPI_FHIR_STARTER_URL}
+COPY . ./hapi-fhir-jpaserver-starter
+
+# If we need CareCloud dependencies, pass valid ssh token as arg
+#ARG TOKEN
+#RUN git config --global url."https://service-carecloud:${TOKEN}@github.com/".insteadOf "https://github.com/"
 
 WORKDIR /tmp/hapi-fhir-jpaserver-starter
 RUN /tmp/apache-maven-3.6.2/bin/mvn clean install -DskipTests
