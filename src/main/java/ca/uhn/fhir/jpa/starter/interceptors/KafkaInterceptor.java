@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.util.Date;
 
 import ca.uhn.fhir.jpa.starter.kafka.models.FHIRKafkaMessage;
-import ca.uhn.fhir.jpa.starter.kafka.FHIRKafkaProducer;
 import ca.uhn.fhir.jpa.starter.context.ContextService;
 import ca.uhn.fhir.jpa.starter.context.models.Context;
 
@@ -30,7 +29,7 @@ public class KafkaInterceptor {
 
   private IProducer producer;
 
-  public KafkaInterceptor(FHIRKafkaProducer producer){
+  public KafkaInterceptor(IProducer producer){
     this.producer = producer;
   }
 

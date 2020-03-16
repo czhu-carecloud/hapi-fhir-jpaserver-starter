@@ -73,13 +73,8 @@ public class HapiProperties {
   static final String BULK_EXPORT_ENABLED = "bulk.export.enabled";
   static final String EXPIRE_SEARCH_RESULTS_AFTER_MINS = "retain_cached_searches_mins";
   static final String MAX_BINARY_SIZE = "max_binary_size";
-  static final String JWT_SECRET = "jwt.secret";
   static final String ADDRESS_SETTINGS_API = "address.settings_api";
   static final String CACHE_MAX_CAPACITY = "cache.max_capacity";
-  static final String KAFKA_HOST = "kafka.host";
-  static final String KAFKA_KEY = "kafka.key";
-  static final String KAFKA_SECRET = "kafka.secret";
-  static final String KAFKA_GROUP = "kafka.group";
 
   private static Properties ourProperties;
 
@@ -490,10 +485,6 @@ public class HapiProperties {
     return (T) Enum.valueOf(theEnumType, value);
   }
 
-  public static String getJwtSecret() {
-    return HapiProperties.getProperty(JWT_SECRET, null);
-  }
-
   public static Integer getCacheMaxCapacity() {
     return getIntegerProperty(CACHE_MAX_CAPACITY, -1);
   }
@@ -502,21 +493,6 @@ public class HapiProperties {
     return HapiProperties.getProperty(ADDRESS_SETTINGS_API, null);
   }
 
-  public static String getKafkaHost() {
-    return HapiProperties.getProperty(KAFKA_HOST, null);
-  }
-
-  public static String getKafkaKey() {
-    return HapiProperties.getProperty(KAFKA_KEY, null);
-  }
-
-  public static String getKafkaSecret() {
-    return HapiProperties.getProperty(KAFKA_SECRET, null);
-  }
-
-  public static String getKafkaGroup() {
-    return HapiProperties.getProperty(KAFKA_GROUP, null);
-  }
   public static boolean getBulkExportEnabled() {
     return HapiProperties.getBooleanProperty(BULK_EXPORT_ENABLED, true);
   }
