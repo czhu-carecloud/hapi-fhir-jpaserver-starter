@@ -18,11 +18,11 @@ public class FHIRKafkaProducer implements DisposableBean, IProducer {
   private static final Logger log = LoggerFactory.getLogger(FHIRKafkaProducer.class.getName());
   private static final Dotenv dotenv = Dotenv.load();
 
-  private final String bootstrapServerConfig = dotenv.get("KAFKA_HOST");
-  private final String KAFKA_KEY = dotenv.get("KAFKA_KEY");
-  private final String KAFKA_SECRET = dotenv.get("KAFKA_SECRET");
-  private static final String jaasTemplate = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"%s\" password=\"%s\";";
-  private final String jaasCfg = String.format(jaasTemplate, KAFKA_KEY, KAFKA_SECRET);
+  private static final String BOOTSTRAP_SERVER_CONFIG = dotenv.get("KAFKA_HOST");
+  private static final String KAFKA_KEY = dotenv.get("KAFKA_KEY");
+  private static final String KAFKA_SECRET = dotenv.get("KAFKA_SECRET");
+  private static final String JASS_TEMPLATE = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"%s\" password=\"%s\";";
+  private static final String JASS_CONFIG = String.format(JASS_TEMPLATE, KAFKA_KEY, KAFKA_SECRET);
 
   private Properties producerProps;
   private Producer<String, String> producer;
@@ -30,7 +30,7 @@ public class FHIRKafkaProducer implements DisposableBean, IProducer {
 
   public FHIRKafkaProducer() {
     producerProps = new Properties();
-    producerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServerConfig);
+    producerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER_CONFIG);
     producerProps.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
     producerProps.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, "1");
     producerProps.put(ProducerConfig.RETRIES_CONFIG, String.valueOf(Integer.MAX_VALUE));
@@ -40,7 +40,7 @@ public class FHIRKafkaProducer implements DisposableBean, IProducer {
     producerProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
     producerProps.put("security.protocol", "SASL_SSL");
     producerProps.put("sasl.mechanism", "PLAIN");
-    producerProps.put("sasl.jaas.config", jaasCfg);
+    producerProps.put("sasl.jaas.config", JASS_CONFIG);
 
     log.info("Kafka configuration for Kafka Producer");
     producerProps.list(System.out);
