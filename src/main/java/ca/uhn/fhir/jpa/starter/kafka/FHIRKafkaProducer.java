@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter.kafka;
 
+import ca.uhn.fhir.jpa.starter.HapiProperties;
 import ca.uhn.fhir.jpa.starter.producer.IProducer;
 import org.apache.kafka.clients.producer.*;
 import org.slf4j.Logger;
@@ -9,18 +10,16 @@ import org.springframework.stereotype.Component;
 import ca.uhn.fhir.jpa.starter.kafka.models.FHIRKafkaMessage;
 
 import java.util.Properties;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-import io.github.cdimascio.dotenv.Dotenv;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 @Component("FHIRKafkaProducer")
 public class FHIRKafkaProducer implements DisposableBean, IProducer {
   private static final Logger log = LoggerFactory.getLogger(FHIRKafkaProducer.class.getName());
-  private static final Dotenv dotenv = Dotenv.load();
 
-  private static final String BOOTSTRAP_SERVER_CONFIG = dotenv.get("KAFKA_HOST");
-  private static final String KAFKA_KEY = dotenv.get("KAFKA_KEY");
-  private static final String KAFKA_SECRET = dotenv.get("KAFKA_SECRET");
+  private static final String BOOTSTRAP_SERVER_CONFIG = HapiProperties.getKafkaHost();
+  private static final String KAFKA_KEY = HapiProperties.getKafkaKey();
+  private static final String KAFKA_SECRET = HapiProperties.getJwtSecret();
   private static final String JASS_TEMPLATE = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"%s\" password=\"%s\";";
   private static final String JASS_CONFIG = String.format(JASS_TEMPLATE, KAFKA_KEY, KAFKA_SECRET);
 

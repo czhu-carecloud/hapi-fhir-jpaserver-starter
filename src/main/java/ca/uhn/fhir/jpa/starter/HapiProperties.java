@@ -6,6 +6,7 @@ import ca.uhn.fhir.jpa.search.elastic.ElasticsearchHibernatePropertiesBuilder;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.server.ETagSupportEnum;
 import com.google.common.annotations.VisibleForTesting;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.hibernate.search.elasticsearch.cfg.ElasticsearchIndexStatus;
 import org.hibernate.search.elasticsearch.cfg.IndexSchemaManagementStrategy;
 import org.jetbrains.annotations.NotNull;
@@ -24,6 +25,9 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.trim;
 
 public class HapiProperties {
+
+  private static final Dotenv dotenv = Dotenv.load();
+
   static final String ENABLE_INDEX_MISSING_FIELDS = "enable_index_missing_fields";
   static final String AUTO_CREATE_PLACEHOLDER_REFERENCE_TARGETS = "auto_create_placeholder_reference_targets";
   static final String ENFORCE_REFERENTIAL_INTEGRITY_ON_WRITE = "enforce_referential_integrity_on_write";
@@ -35,9 +39,6 @@ public class HapiProperties {
   static final String REUSE_CACHED_SEARCH_RESULTS_MILLIS = "reuse_cached_search_results_millis";
   static final String DATASOURCE_DRIVER = "datasource.driver";
   static final String DATASOURCE_MAX_POOL_SIZE = "datasource.max_pool_size";
-  static final String DATASOURCE_PASSWORD = "datasource.password";
-  static final String DATASOURCE_URL = "datasource.url";
-  static final String DATASOURCE_USERNAME = "datasource.username";
   static final String DEFAULT_ENCODING = "default_encoding";
   static final String DEFAULT_PAGE_SIZE = "default_page_size";
   static final String DEFAULT_PRETTY_PRINT = "default_pretty_print";
@@ -75,6 +76,19 @@ public class HapiProperties {
   static final String MAX_BINARY_SIZE = "max_binary_size";
   static final String ADDRESS_SETTINGS_API = "address.settings_api";
   static final String CACHE_MAX_CAPACITY = "cache.max_capacity";
+
+  // environment variables go here
+
+  static final String KAFKA_HOST = "KAFKA_HOST";
+  static final String KAFKA_KEY = "KAFKA_KEY";
+  static final String KAFKA_SECRET = "KAFKA_SECRET";
+  static final String KAFKA_GROUP = "KAFKA_GROUP";
+
+  static final String JWT_SECRET = "JWT_SECRET";
+
+  static final String DATASOURCE_PASSWORD = "DATASOURCE_PASSWORD";
+  static final String DATASOURCE_URL = "DATASOURCE_URL";
+  static final String DATASOURCE_USERNAME = "DATASOURCE_USERNAME";
 
   private static Properties ourProperties;
 
@@ -295,18 +309,6 @@ public class HapiProperties {
     return HapiProperties.getIntegerProperty(DATASOURCE_MAX_POOL_SIZE, 10);
   }
 
-  public static String getDataSourceUrl() {
-    return HapiProperties.getProperty(DATASOURCE_URL, "jdbc:derby:directory:target/jpaserver_derby_files;create=true");
-  }
-
-  public static String getDataSourceUsername() {
-    return HapiProperties.getProperty(DATASOURCE_USERNAME);
-  }
-
-  public static String getDataSourcePassword() {
-    return HapiProperties.getProperty(DATASOURCE_PASSWORD);
-  }
-
   public static Boolean getAllowMultipleDelete() {
     return HapiProperties.getBooleanProperty(ALLOW_MULTIPLE_DELETE, false);
   }
@@ -496,5 +498,41 @@ public class HapiProperties {
   public static boolean getBulkExportEnabled() {
     return HapiProperties.getBooleanProperty(BULK_EXPORT_ENABLED, true);
   }
+
+  // environment variable getters
+
+  public static String getKafkaHost() {
+    return dotenv.get(KAFKA_HOST);
+  }
+
+  public static String getKafkaKey() {
+    return dotenv.get(KAFKA_KEY);
+  }
+
+  public static String getKafkaSecret() {
+    return dotenv.get(KAFKA_SECRET);
+  }
+
+  public static String getKafkaGroup() {
+    return dotenv.get(KAFKA_GROUP);
+  }
+
+  public static String getJwtSecret() {
+    return dotenv.get(JWT_SECRET);
+  }
+
+  public static String getDataSourceUrl() {
+    return dotenv.get(DATASOURCE_URL);
+  }
+
+  public static String getDataSourceUsername() {
+    return dotenv.get(DATASOURCE_USERNAME);
+  }
+
+  public static String getDataSourcePassword() {
+
+    return dotenv.get(DATASOURCE_PASSWORD);
+  }
+
 }
 
