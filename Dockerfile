@@ -25,6 +25,9 @@ FROM tomcat:9-jre11
 RUN mkdir -p /data/hapi/lucenefiles && chmod 775 /data/hapi/lucenefiles
 COPY --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/target/*.war /usr/local/tomcat/webapps/
 
-EXPOSE 8080
+# Use port 80 instead of default tomcat server port 8080
+RUN sed -i 's/port="8080"/port="80"/' /usr/local/tomcat/conf/server.xml
+
+EXPOSE 80
 
 CMD ["catalina.sh", "run"]
