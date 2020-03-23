@@ -43,7 +43,6 @@ public class HapiProperties {
   static final String DEFAULT_PAGE_SIZE = "default_page_size";
   static final String DEFAULT_PRETTY_PRINT = "default_pretty_print";
   static final String ETAG_SUPPORT = "etag_support";
-  static final String FHIR_VERSION = "fhir_version";
   static final String ALLOW_CASCADING_DELETES = "allow_cascading_deletes";
   static final String HAPI_PROPERTIES = "hapi.properties";
   static final String LOGGER_ERROR_FORMAT = "logger.error_format";
@@ -52,7 +51,6 @@ public class HapiProperties {
   static final String LOGGER_NAME = "logger.name";
   static final String MAX_FETCH_SIZE = "max_fetch_size";
   static final String MAX_PAGE_SIZE = "max_page_size";
-  static final String SERVER_ADDRESS = "server_address";
   static final String SERVER_ID = "server.id";
   static final String SERVER_NAME = "server.name";
   static final String SUBSCRIPTION_EMAIL_ENABLED = "subscription.email.enabled";
@@ -89,6 +87,9 @@ public class HapiProperties {
   static final String DATASOURCE_PASSWORD = "DATASOURCE_PASSWORD";
   static final String DATASOURCE_URL = "DATASOURCE_URL";
   static final String DATASOURCE_USERNAME = "DATASOURCE_USERNAME";
+
+  static final String SERVER_ADDRESS = "SERVER_ADDRESS";
+  static final String FHIR_VERSION = "FHIR_VERSION";
 
   private static Properties ourProperties;
 
@@ -232,7 +233,7 @@ public class HapiProperties {
   }
 
   public static FhirVersionEnum getFhirVersion() {
-    String fhirVersionString = HapiProperties.getProperty(FHIR_VERSION);
+    String fhirVersionString = dotenv.get(FHIR_VERSION);
 
     if (fhirVersionString != null && fhirVersionString.length() > 0) {
       return FhirVersionEnum.valueOf(fhirVersionString);
@@ -270,7 +271,7 @@ public class HapiProperties {
   }
 
   public static String getServerAddress() {
-    return HapiProperties.getProperty(SERVER_ADDRESS);
+    return dotenv.get(SERVER_ADDRESS);
   }
 
   public static Integer getDefaultPageSize() {
