@@ -26,7 +26,11 @@ import static org.apache.commons.lang3.StringUtils.trim;
 
 public class HapiProperties {
 
-  private static final Dotenv dotenv = Dotenv.load();
+  private static final Dotenv dotenv = Dotenv
+    .configure()
+    .ignoreIfMalformed()
+    .ignoreIfMissing()
+    .load();
 
   static final String ENABLE_INDEX_MISSING_FIELDS = "enable_index_missing_fields";
   static final String AUTO_CREATE_PLACEHOLDER_REFERENCE_TARGETS = "auto_create_placeholder_reference_targets";
