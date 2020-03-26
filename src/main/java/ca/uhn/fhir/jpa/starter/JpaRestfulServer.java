@@ -225,6 +225,14 @@ public class JpaRestfulServer extends RestfulServer {
     this.registerInterceptor(auditEventInterceptor);
 
     /*
+     * AuditEvent interceptor generates an AuditEvent resource whenever another resource
+     * is either created or updated
+     */
+    DaoRegistry daoRegistry = appCtx.getBean(DaoRegistry.class);
+    AuditEventInterceptor auditEventInterceptor = new AuditEventInterceptor(daoRegistry);
+    this.registerInterceptor(auditEventInterceptor);
+
+    /*
      * If you are hosting this server at a specific DNS name, the server will try to
      * figure out the FHIR base URL based on what the web container tells it, but
      * this doesn't always work. If you are setting links in your search bundles that
