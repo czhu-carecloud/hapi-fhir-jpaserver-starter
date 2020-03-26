@@ -27,6 +27,7 @@ import ca.uhn.fhir.jpa.starter.kafka.FHIRKafkaProducer;
 import ca.uhn.fhir.jpa.starter.utils.HttpClient;
 import ca.uhn.fhir.jpa.starter.utils.LRUCache;
 import ca.uhn.fhir.jpa.starter.interceptors.KafkaInterceptor;
+import ca.uhn.fhir.jpa.starter.interceptors.AuditEventInterceptor;
 import ca.uhn.fhir.jpa.subscription.SubscriptionInterceptorLoader;
 import ca.uhn.fhir.jpa.subscription.module.interceptor.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceProviderFactory;
@@ -47,6 +48,7 @@ import java.util.*;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.hl7.fhir.dstu3.model.Meta;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
@@ -207,11 +209,21 @@ public class JpaRestfulServer extends RestfulServer {
     ContextInterceptor contextInterceptor = new ContextInterceptor(new LRUCache<String, List<String>>(HapiProperties.getCacheMaxCapacity()), new HttpClient());
     this.registerInterceptor(contextInterceptor);
 
-    /* Kafka interceptor
+    /*
+     * Kafka interceptor emits a message to the Kafka stream when a resource
+     * is either created or updated
      */
     KafkaInterceptor kafkaInterceptor = new KafkaInterceptor(new FHIRKafkaProducer());
     this.registerInterceptor(kafkaInterceptor);
 
+
+    /*
+     * AuditEvent interceptor generates an AuditEvent resource whenever another resource
+     * is either created or updated
+     */
+    DaoRegistry daoRegistry = appCtx.getBean(DaoRegistry.class);
+    AuditEventInterceptor auditEventInterceptor = new AuditEventInterceptor(daoRegistry);
+    this.registerInterceptor(auditEventInterceptor);
 
     /*
      * If you are hosting this server at a specific DNS name, the server will try to
@@ -290,7 +302,6 @@ public class JpaRestfulServer extends RestfulServer {
     }
 
     // Cascading deletes
-    DaoRegistry daoRegistry = appCtx.getBean(DaoRegistry.class);
     IInterceptorBroadcaster interceptorBroadcaster = appCtx.getBean(IInterceptorBroadcaster.class);
     if (HapiProperties.getAllowCascadingDeletes()) {
       CascadingDeleteInterceptor cascadingDeleteInterceptor = new CascadingDeleteInterceptor(
