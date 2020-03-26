@@ -18,7 +18,7 @@ jobs:
           MYSQL_USER: 'admin'
           MYSQL_PASSWORD: 'admin'
           MYSQL_ROOT_PASSWORD: 'admin'
-    working_directory: ~/circleci-demo-java-springm
+    working_directory: ~/circleci-demo-java-spring
     steps:
       - checkout
       - restore_cache:
