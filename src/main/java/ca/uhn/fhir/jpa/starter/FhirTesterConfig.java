@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter;
 
+import com.carecloud.fhir.hapi.stu3.CareCloudHapiProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -39,11 +40,11 @@ public class FhirTesterConfig {
 		TesterConfig retVal = new TesterConfig();
 		retVal
 			.addServer()
-				.withId(HapiProperties.getServerId())
-				.withFhirVersion(HapiProperties.getFhirVersion())
-				.withBaseUrl(HapiProperties.getServerAddress())
-				.withName(HapiProperties.getServerName());
-		retVal.setRefuseToFetchThirdPartyUrls(HapiProperties.getTesterConfigRefustToFetchThirdPartyUrls());
+				.withId(CareCloudHapiProperties.getServerId())
+				.withFhirVersion(CareCloudHapiProperties.getFhirVersion())
+				.withBaseUrl(CareCloudHapiProperties.getServerAddress())
+				.withName(CareCloudHapiProperties.getServerName());
+		retVal.setRefuseToFetchThirdPartyUrls(CareCloudHapiProperties.getTesterConfigRefustToFetchThirdPartyUrls());
 		return retVal;
 	}
 

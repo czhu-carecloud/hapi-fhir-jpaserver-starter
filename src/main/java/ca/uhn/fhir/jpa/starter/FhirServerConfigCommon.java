@@ -7,6 +7,7 @@ import ca.uhn.fhir.jpa.model.entity.ModelConfig;
 import ca.uhn.fhir.jpa.subscription.module.channel.SubscriptionDeliveryHandlerFactory;
 import ca.uhn.fhir.jpa.subscription.module.subscriber.email.IEmailSender;
 import ca.uhn.fhir.jpa.subscription.module.subscriber.email.JavaMailEmailSender;
+import com.carecloud.fhir.hapi.stu3.CareCloudHapiProperties;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hl7.fhir.dstu2.model.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,9 +164,9 @@ public class FhirServerConfigCommon {
     BasicDataSource retVal = new BasicDataSource();
     Driver driver = (Driver) Class.forName(HapiProperties.getDataSourceDriver()).getConstructor().newInstance();
     retVal.setDriver(driver);
-    retVal.setUrl(HapiProperties.getDataSourceUrl());
-    retVal.setUsername(HapiProperties.getDataSourceUsername());
-    retVal.setPassword(HapiProperties.getDataSourcePassword());
+    retVal.setUrl(CareCloudHapiProperties.getDataSourceUrl());
+    retVal.setUsername(CareCloudHapiProperties.getDataSourceUsername());
+    retVal.setPassword(CareCloudHapiProperties.getDataSourcePassword());
     retVal.setMaxTotal(HapiProperties.getDataSourceMaxPoolSize());
     return retVal;
   }

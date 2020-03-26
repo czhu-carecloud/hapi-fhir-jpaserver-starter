@@ -1,6 +1,9 @@
 # Disable SonarLint files
 .idea/**/sonarlint
 
+# Disable .env
+.env
+
 #########
 # DO NOT EDIT PAST THIS POINT
 # The rest of the rules in this file are generated based on IntelliJ gitignore tool

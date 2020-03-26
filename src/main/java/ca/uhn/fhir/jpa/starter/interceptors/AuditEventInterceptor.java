@@ -29,6 +29,14 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * AuditEvent Interceptor: This class defines two interceptors which both produce and
+ * save AuditEvent FHIR resources prior to each database commit -- one for every Create
+ * event and the other for every Update event -- within the JPA server. This class
+ * depends on the DaoRegistry to be passed in when the interceptor is registered
+ * in order parse the AuditEvent DAO from the registry to be used to persist the
+ * generated resource.
+ */
 
 @Interceptor
 public class AuditEventInterceptor {
@@ -147,8 +155,8 @@ public class AuditEventInterceptor {
       case "DELETE": return AuditEventAction.D;
       case "SEARCH": return AuditEventAction.E;
       default:       return null;
-
     }
+
   }
   
   private AuditEventAgentComponent buildAuditEventAgentComponent(Context theContext){

@@ -1,7 +1,7 @@
 package ca.uhn.fhir.jpa.starter.kafka;
 
-import ca.uhn.fhir.jpa.starter.HapiProperties;
-import ca.uhn.fhir.jpa.starter.producer.IProducer;
+import com.carecloud.fhir.hapi.stu3.CareCloudHapiProperties;
+import com.carecloud.fhir.hapi.stu3.producer.IProducer;
 import org.apache.kafka.clients.producer.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +17,9 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 public class FHIRKafkaProducer implements DisposableBean, IProducer {
   private static final Logger log = LoggerFactory.getLogger(FHIRKafkaProducer.class.getName());
 
-  private static final String BOOTSTRAP_SERVER_CONFIG = HapiProperties.getKafkaHost();
-  private static final String KAFKA_KEY = HapiProperties.getKafkaKey();
-  private static final String KAFKA_SECRET = HapiProperties.getKafkaSecret();
+  private static final String BOOTSTRAP_SERVER_CONFIG = CareCloudHapiProperties.getKafkaHost();
+  private static final String KAFKA_KEY = CareCloudHapiProperties.getKafkaKey();
+  private static final String KAFKA_SECRET = CareCloudHapiProperties.getKafkaSecret();
   private static final String JASS_TEMPLATE = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"%s\" password=\"%s\";";
   private static final String JASS_CONFIG = String.format(JASS_TEMPLATE, KAFKA_KEY, KAFKA_SECRET);
 

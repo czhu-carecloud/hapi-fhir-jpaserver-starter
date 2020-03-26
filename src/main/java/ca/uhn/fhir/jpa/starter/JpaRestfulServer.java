@@ -43,6 +43,14 @@ import ca.uhn.fhir.rest.server.interceptor.ResponseValidatingInterceptor;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 
+import com.carecloud.fhir.hapi.stu3.CareCloudHapiProperties;
+import com.carecloud.fhir.hapi.stu3.interceptors.ContextInterceptor;
+import com.carecloud.fhir.hapi.stu3.kafka.FHIRKafkaProducer;
+import com.carecloud.fhir.hapi.stu3.utils.HttpClient;
+import com.carecloud.fhir.hapi.stu3.utils.LRUCache;
+import com.carecloud.fhir.hapi.stu3.interceptors.KafkaInterceptor;
+import com.carecloud.fhir.hapi.stu3.interceptors.AuditEventInterceptor;
+
 import java.util.*;
 
 import org.hl7.fhir.dstu3.model.Bundle;
@@ -85,7 +93,7 @@ public class JpaRestfulServer extends RestfulServer {
     /*
      * ResourceProviders are fetched from the Spring context
      */
-    FhirVersionEnum fhirVersion = HapiProperties.getFhirVersion();
+    FhirVersionEnum fhirVersion = CareCloudHapiProperties.getFhirVersion();
     ResourceProviderFactory resourceProviders;
     Object systemProvider;
     if (fhirVersion == FhirVersionEnum.DSTU2) {
@@ -206,7 +214,7 @@ public class JpaRestfulServer extends RestfulServer {
      * and stamps context on the resource.Meta.Tag on saves and
      * filters queries by Context.
      */
-    ContextInterceptor contextInterceptor = new ContextInterceptor(new LRUCache<String, List<String>>(HapiProperties.getCacheMaxCapacity()), new HttpClient());
+    ContextInterceptor contextInterceptor = new ContextInterceptor(new LRUCache<String, List<String>>(CareCloudHapiProperties.getCacheMaxCapacity()), new HttpClient());
     this.registerInterceptor(contextInterceptor);
 
     /*
@@ -238,7 +246,7 @@ public class JpaRestfulServer extends RestfulServer {
      * this doesn't always work. If you are setting links in your search bundles that
      * just refer to "localhost", you might want to use a server address strategy:
      */
-    String serverAddress = HapiProperties.getServerAddress();
+    String serverAddress = CareCloudHapiProperties.getServerAddress();
     if (serverAddress != null && serverAddress.length() > 0) {
       setServerAddressStrategy(new HardcodedServerAddressStrategy(serverAddress));
     }

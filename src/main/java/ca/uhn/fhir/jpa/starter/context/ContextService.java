@@ -1,11 +1,11 @@
 package ca.uhn.fhir.jpa.starter.context;
 
-import ca.uhn.fhir.jpa.starter.HapiProperties;
-import ca.uhn.fhir.jpa.starter.context.models.Context;
-import ca.uhn.fhir.jpa.starter.context.models.DataPolicyFetchBody;
-import ca.uhn.fhir.jpa.starter.context.models.DataSharingPolicy;
-import ca.uhn.fhir.jpa.starter.utils.IHttpClient;
-import ca.uhn.fhir.jpa.starter.utils.ILRUCache;
+import com.carecloud.fhir.hapi.stu3.CareCloudHapiProperties;
+import com.carecloud.fhir.hapi.stu3.context.models.Context;
+import com.carecloud.fhir.hapi.stu3.context.models.DataPolicyFetchBody;
+import com.carecloud.fhir.hapi.stu3.context.models.DataSharingPolicy;
+import com.carecloud.fhir.hapi.stu3.utils.IHttpClient;
+import com.carecloud.fhir.hapi.stu3.utils.ILRUCache;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -40,8 +40,8 @@ public class ContextService {
     this.cache = cache;
     _httpClient = httpClient;
     _token = token;
-    String _secret = dotenv.get(JWT_SECRET);
-    _settingsApi = HapiProperties.getAddressSettingsApi();
+    String _secret = CareCloudHapiProperties.getJwtSecret();
+    _settingsApi = CareCloudHapiProperties.getAddressSettingsApi();
     _gson = new Gson();
     Algorithm _algorithm = Algorithm.HMAC256(_secret);
     verifier = JWT.require(_algorithm).build();
