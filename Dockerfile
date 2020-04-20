@@ -1,9 +1,9 @@
 FROM hapiproject/hapi:base as build-hapi
 
 ARG HAPI_FHIR_URL=https://github.com/jamesagnew/hapi-fhir/
-ARG HAPI_FHIR_BRANCH=master
+ARG HAPI_FHIR_BRANCH=v4.2.0
 ARG HAPI_FHIR_STARTER_URL=https://github.com/hapifhir/hapi-fhir-jpaserver-starter/
-ARG HAPI_FHIR_STARTER_BRANCH=master
+ARG HAPI_FHIR_STARTER_BRANCH=v4.2.0
 
 RUN git clone --branch ${HAPI_FHIR_BRANCH} ${HAPI_FHIR_URL}
 WORKDIR /tmp/hapi-fhir/
