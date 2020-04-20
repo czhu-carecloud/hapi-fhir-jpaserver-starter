@@ -213,8 +213,8 @@ public class JpaRestfulServer extends RestfulServer {
      * Kafka interceptor emits a message to the Kafka stream when a resource
      * is either created or updated
      */
-    KafkaInterceptor kafkaInterceptor = new KafkaInterceptor(new FHIRKafkaProducer());
-    this.registerInterceptor(kafkaInterceptor);
+//    KafkaInterceptor kafkaInterceptor = new KafkaInterceptor(new FHIRKafkaProducer());
+//    this.registerInterceptor(kafkaInterceptor);
 
 
     /*
