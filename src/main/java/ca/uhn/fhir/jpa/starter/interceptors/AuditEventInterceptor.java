@@ -11,7 +11,6 @@ import ca.uhn.fhir.jpa.provider.dstu3.JpaResourceProviderDstu3;
 import ca.uhn.fhir.jpa.starter.context.ContextService;
 import ca.uhn.fhir.jpa.starter.context.models.Context;
 import ca.uhn.fhir.jpa.starter.context.models.User;
-import ca.uhn.fhir.jpa.starter.kafka.FHIRKafkaProducer;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
