@@ -19,7 +19,7 @@ public class FHIRKafkaProducer implements DisposableBean, IProducer {
 
   private static final String BOOTSTRAP_SERVER_CONFIG = HapiProperties.getKafkaHost();
   private static final String KAFKA_KEY = HapiProperties.getKafkaKey();
-  private static final String KAFKA_SECRET = HapiProperties.getJwtSecret();
+  private static final String KAFKA_SECRET = HapiProperties.getKafkaSecret();
   private static final String JASS_TEMPLATE = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"%s\" password=\"%s\";";
   private static final String JASS_CONFIG = String.format(JASS_TEMPLATE, KAFKA_KEY, KAFKA_SECRET);
 

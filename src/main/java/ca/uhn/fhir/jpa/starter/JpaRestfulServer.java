@@ -23,10 +23,10 @@ import ca.uhn.fhir.jpa.provider.r5.JpaConformanceProviderR5;
 import ca.uhn.fhir.jpa.provider.r5.JpaSystemProviderR5;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.starter.interceptors.ContextInterceptor;
-//import ca.uhn.fhir.jpa.starter.kafka.FHIRKafkaProducer;
+import ca.uhn.fhir.jpa.starter.kafka.FHIRKafkaProducer;
 import ca.uhn.fhir.jpa.starter.utils.HttpClient;
 import ca.uhn.fhir.jpa.starter.utils.LRUCache;
-//import ca.uhn.fhir.jpa.starter.interceptors.KafkaInterceptor;
+import ca.uhn.fhir.jpa.starter.interceptors.KafkaInterceptor;
 import ca.uhn.fhir.jpa.starter.interceptors.AuditEventInterceptor;
 import ca.uhn.fhir.jpa.subscription.SubscriptionInterceptorLoader;
 import ca.uhn.fhir.jpa.subscription.module.interceptor.SubscriptionDebugLogInterceptor;
@@ -213,9 +213,8 @@ public class JpaRestfulServer extends RestfulServer {
      * Kafka interceptor emits a message to the Kafka stream when a resource
      * is either created or updated
      */
-//    KafkaInterceptor kafkaInterceptor = new KafkaInterceptor(new FHIRKafkaProducer());
-//    this.registerInterceptor(kafkaInterceptor);
-
+    KafkaInterceptor kafkaInterceptor = new KafkaInterceptor(new FHIRKafkaProducer());
+    this.registerInterceptor(kafkaInterceptor);
 
     /*
      * AuditEvent interceptor generates an AuditEvent resource whenever another resource

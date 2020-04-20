@@ -75,12 +75,10 @@ public class HapiProperties {
   static final String GRAPHQL_ENABLED = "graphql.enabled";
   static final String BULK_EXPORT_ENABLED = "bulk.export.enabled";
   static final String EXPIRE_SEARCH_RESULTS_AFTER_MINS = "retain_cached_searches_mins";
-  static final String MAX_BINARY_SIZE = "max_binary_size";
-  static final String ADDRESS_SETTINGS_API = "address.settings_api";
-  static final String CACHE_MAX_CAPACITY = "cache.max_capacity";
+  static final String MAX_BINARY_SIZE = "max_binary_size";  static final String CACHE_MAX_CAPACITY = "cache.max_capacity";
 
   // environment variables go here
-
+  static final String SETTINGS_API = "SETTINGS_API";
   static final String KAFKA_HOST = "KAFKA_HOST";
   static final String KAFKA_KEY = "KAFKA_KEY";
   static final String KAFKA_SECRET = "KAFKA_SECRET";
@@ -496,9 +494,7 @@ public class HapiProperties {
     return getIntegerProperty(CACHE_MAX_CAPACITY, -1);
   }
 
-  public static String getAddressSettingsApi() {
-    return HapiProperties.getProperty(ADDRESS_SETTINGS_API, null);
-  }
+  public static String getAddressSettingsApi() { return dotenv.get(SETTINGS_API); }
 
   public static boolean getBulkExportEnabled() {
     return HapiProperties.getBooleanProperty(BULK_EXPORT_ENABLED, true);
@@ -534,10 +530,7 @@ public class HapiProperties {
     return dotenv.get(DATASOURCE_USERNAME);
   }
 
-  public static String getDataSourcePassword() {
-
-    return dotenv.get(DATASOURCE_PASSWORD);
-  }
+  public static String getDataSourcePassword() { return dotenv.get(DATASOURCE_PASSWORD); }
 
 }
 
